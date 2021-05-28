@@ -61,10 +61,10 @@ export default {
         if (self.form.userid != "" && self.form.userpwd != "") {
           if(this.typeSelect == "评审"){
             this.typeSelect = "doctor"
-          }else if(this.typeSelect == "药师"){
+          }else if(this.typeSelect == "管理员"){
             this.typeSelect = "pharmacist"
 
-          }else if(this.typeSelect == "管理员"){
+          }else if(this.typeSelect == "会计"){
             this.typeSelect = "cashier"
 
           }else{
@@ -89,10 +89,10 @@ export default {
                 if(this.typeSelect == "doctor"){
                       this.$router.push({path:"/rehome"})
                 }else if(this.typeSelect == "pharmacist"){
-                      this.$router.push({path:"/medihome"})
+                      this.$router.push({path:"/adhome"})
 
                 }else if(this.typeSelect == "cashier"){
-                      this.$router.push({path:"/adhome"})
+                      this.$router.push({path:"/dochome"})
 
                 }else{
                       this.$router.push({path:"/admhome"})

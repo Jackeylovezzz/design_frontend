@@ -311,15 +311,15 @@ export default {
       totalIn: "0",
       totalOut: "0",
       form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: "",
+      },
       infoContent: [
         { key: "姓名：", value: this.$store.state.name },
         { key: "性别：", value: this.$store.state.gender },
@@ -736,7 +736,7 @@ export default {
     },
     onSubmit() {
       console.log("submit!");
-      alert("创建成功")
+      alert("创建成功");
     },
   },
 };
@@ -769,7 +769,7 @@ export default {
   top: 0%;
   left: 0%;
 }
-.list{
+.list {
   background-image: url("~@/style/background1.jpg");
   width: 100%;
   height: 100%;

@@ -11,79 +11,77 @@
     >
       <el-submenu index="1">
         <template slot="title">会议管理</template>
-        <el-menu-item
-          index="1-1"
-          @change="queryAppointment"
-        >查看我的预约</el-menu-item>
+        <el-menu-item index="1-1" @change="queryAppointment"
+          >查看我的预约</el-menu-item
+        >
         <el-menu-item index="1-2">预约会议</el-menu-item>
       </el-submenu>
-      <el-menu-item
-        @click="queryAppointment"
-        index="2"
-      >查看会议</el-menu-item>
+      <el-menu-item @click="queryAppointment" index="2">查看会议</el-menu-item>
       <el-menu-item index="3">我的账户</el-menu-item>
       <el-menu-item index="4">提交论文</el-menu-item>
     </el-menu>
     <div class="patient_contain">
-      <div
-        class="myBooking"
-        v-if="choice=='1-1'"
-      >
-        <div
-          class="showBooking"
-          v-if="ifBooking=='1'"
-        >
+      <div class="myBooking" v-if="choice == '1-1'">
+        <div class="showBooking" v-if="ifBooking == '1'">
           <el-card class="myBooking-box-card">
-            <div
-              slot="header"
-              class="clearfix"
-            >
+            <div slot="header" class="clearfix">
               <span class="text2 item title">我的预约</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 @click="cancelBook"
                 type="text"
-              >取消预约</el-button>
+                >取消预约</el-button
+              >
             </div>
-            <div
-              v-for="item in bookingContent"
-              :key="item"
-              class="text1 item"
-            >
-              {{item.key + ' ' +item.value}}
+            <div v-for="item in bookingContent" :key="item" class="text1 item">
+              {{ item.key + " " + item.value }}
             </div>
           </el-card>
         </div>
-        <div
-          class="noBooking"
-          v-if="ifBooking=='0'"
-        >
+        <div class="noBooking" v-if="ifBooking == '0'">
           <el-card class="noBooking-box-card">
-            {{'您暂时没有有效的预约'}}
+            {{ "您暂时没有有效的预约" }}
           </el-card>
         </div>
       </div>
-      <div
-        class="toBook"
-        v-if="choice=='1-2'"
-      >
-        <div
-          class="doBook"
-          v-if="ifBooking=='0'"
-        >
-          <div class="bookIfSpecialist">
+      <div class="toBook" v-if="choice == '1-2'">
+        <div v-if="ifBooking == '0'">
+          <el-row :gutter="20">
+            <el-col :span="16">
+              <div class="bookcard">
+                <el-card>
+                  <el-select
+                    v-model="officeChoice"
+                    @change="getDeptExpert"
+                    placeholder="请选择会议"
+                  >
+                    <el-option
+                      v-for="item in OfficeOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                      :disabled="item.disabled"
+                    >
+                    </el-option>
+                  </el-select>
+                  <div v-bind="meetinginfo"></div>
+                </el-card>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- <div class="bookIfSpecialist">
             <el-radio-group
               v-model="ifSpecialist"
               class="ifSpecialistChoose"
             >
-<!--              <el-radio-button-->
-<!--                label="普通门诊"-->
-<!--                @click="getDept()"-->
-<!--              ></el-radio-button>-->
-<!--              <el-radio-button-->
-<!--                label="专家门诊"-->
-<!--                @click="getDept()"-->
-<!--              ></el-radio-button>-->
+             <el-radio-button
+           label="普通门诊"
+             @click="getDept()"
+             ></el-radio-button>
+       <el-radio-button label="专家门诊"
+              @click="getDept()">
+               
+          </el-radio-button>
             </el-radio-group>
           </div>
           <div class="bookForm">
@@ -157,42 +155,44 @@
               size="mini"
               style="margin-left: 12.7%"
             >预约</el-button>
-          </div>
+          </div> -->
         </div>
-        <div
-          class="alreadyBooking"
-          v-if="ifBooking=='1'"
-        >
+        <div class="alreadyBooking" v-if="ifBooking == '1'">
           <el-card class="alreadyBooking-box-card">
-            {{'您已有预约，无法再次预约'}}
+            {{ "您已有预约，无法再次预约" }}
           </el-card>
         </div>
       </div>
-      <div
-        class="myInLine"
-        v-if="choice=='2'"
-      >
+      <div class="myInLine" v-if="choice == '2'">
         <div class="myInLineContain">
-          <div style="display:flex;flex-direction:row;">
-            <span style="font-size:20px;margin-left:0%;font-weight:bold">类别：</span>
+          <div style="display: flex; flex-direction: row">
+            <span style="font-size: 20px; margin-left: 0%; font-weight: bold"
+              >类别：</span
+            >
             <el-radio-group
               v-model="inLineCheckTypeChoice"
-              style="display:flex;flex-direction:row;width:27%;margin-bottom:3%"
+              style="
+                display: flex;
+                flex-direction: row;
+                width: 27%;
+                margin-bottom: 3%;
+              "
               @change="inLineCheckTypeChosen"
             >
               <el-radio-button label="参会人员信息"></el-radio-button>
-<!--              <el-radio-button label="专家门诊"></el-radio-button>-->
+              <!--              <el-radio-button label="专家门诊"></el-radio-button>-->
             </el-radio-group>
             <span
-              style="font-size:20px;margin-left:15%;font-weight:bold"
-              v-if="inLineCheckTypeChoice!=''"
-            >会议：</span>
+              style="font-size: 20px; margin-left: 15%; font-weight: bold"
+              v-if="inLineCheckTypeChoice != ''"
+              >会议：</span
+            >
             <el-select
               v-model="inLineCheckOfficeChoice"
               @change="getQueueData"
-              style="margin-left:2%;margin-bottom:3%;width:29%"
+              style="margin-left: 2%; margin-bottom: 3%; width: 29%"
               placeholder="请选择会议"
-              v-if="inLineCheckTypeChoice!=''"
+              v-if="inLineCheckTypeChoice != ''"
             >
               <el-option
                 v-for="item in OfficeOptions"
@@ -210,84 +210,66 @@
             style="width: 100%"
             max-height="660"
           >
-            <el-table-column
-              prop="numberInLine"
-              label="序号"
-              width="180"
-            >
+            <el-table-column prop="numberInLine" label="序号" width="180">
             </el-table-column>
-            <el-table-column
-              prop="name"
-              label="姓名"
-              width="180"
-            >
+            <el-table-column prop="name" label="姓名" width="180">
             </el-table-column>
-            <el-table-column
-              prop="state"
-              label="状态"
-            >
-            </el-table-column>
+            <el-table-column prop="state" label="状态"> </el-table-column>
           </el-table>
         </div>
       </div>
-      <div
-        class="myInfo"
-        v-if="choice=='3'"
-      >
+      <div class="myInfo" v-if="choice == '3'">
         <div class="myInfoContain">
           <el-card class="myInfo-box-card">
-            <div
-              slot="header"
-              class="clearfix"
-            >
+            <div slot="header" class="clearfix">
               <span class="text2 item title">我的账户信息</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="open"
-              >退出登录</el-button>
+                >退出登录</el-button
+              >
             </div>
-            <div
-              v-for="item in infoContent"
-              :key="item"
-              class="text1 item"
-            >
-              {{item.key + ' ' +item.value}}
+            <div v-for="item in infoContent" :key="item" class="text1 item">
+              {{ item.key + " " + item.value }}
             </div>
           </el-card>
         </div>
       </div>
-      <div
-        class="myInfo"
-        v-if="choice=='4'"
-      >
-      <el-card>
-        <el-upload
-          class="upload-demo"
-          ref="upload"
-          action="http://localhost:8080/patient/uploadwork"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-success="printsuccess"
-          :file-list="fileList"
-          :auto-upload="false">
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-          
-        </el-upload>
-      </el-card>
-      
-        
+      <div class="myInfo" v-if="choice == '4'">
+        <el-card>
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="http://localhost:8080/patient/uploadwork"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="printsuccess"
+            :file-list="fileList"
+            :auto-upload="false"
+          >
+            <el-button slot="trigger" size="small" type="primary"
+              >选取文件</el-button
+            >
+            <el-button
+              style="margin-left: 10px"
+              size="small"
+              type="success"
+              @click="submitUpload"
+              >上传到服务器</el-button
+            >
+          </el-upload>
+        </el-card>
       </div>
-<!--        <div>-->
-<!--          <div class="con">-->
-<!--            <div class="tip">选择文件：</div>-->
-<!--            <input class="file" type="file" title="请选择文件" value="请选择文件">-->
-<!--            <div class="tip">输入姓名：</div>-->
-<!--            <input class="inputS" type="text" v-model="name" placeholder="请在此输入姓名">-->
-<!--            <button class="submit" @click="submit">提交</button>-->
-<!--          </div>-->
-<!--        </div>-->
+      <!--        <div>-->
+      <!--          <div class="con">-->
+      <!--            <div class="tip">选择文件：</div>-->
+      <!--            <input class="file" type="file" title="请选择文件" value="请选择文件">-->
+      <!--            <div class="tip">输入姓名：</div>-->
+      <!--            <input class="inputS" type="text" v-model="name" placeholder="请在此输入姓名">-->
+      <!--            <button class="submit" @click="submit">提交</button>-->
+      <!--          </div>-->
+      <!--        </div>-->
     </div>
   </div>
 </template>
@@ -299,6 +281,7 @@ export default {
     return {
       activeIndex: "3",
       choice: "3",
+      meetingList: [],
       ifBooking: 0,
       bookingContent: [],
       infoContent: [
@@ -371,7 +354,7 @@ export default {
 
       inLineData: [],
 
-      name:"",
+      name: "",
     };
   },
   mounted() {
@@ -384,11 +367,13 @@ export default {
       console.log(key, keyPath);
       this.choice = key;
     },
-    printsuccess(){alert("上传成功")},
+    printsuccess() {
+      alert("上传成功");
+    },
     submitUpload() {
-        this.$refs.upload.submit();
-        alert("上传成功")
-      },
+      this.$refs.upload.submit();
+      alert("上传成功");
+    },
     getDept() {
       const self = this;
       self
@@ -400,6 +385,7 @@ export default {
           console.log(res.data.body);
           if (res.data.status === 1) {
             self.OfficeOptions = [];
+            self.meetingList = res.data.body;
             for (var i = 0; i < res.data.body.length; i++) {
               self.OfficeOptions.push({
                 label: res.data.body[i].rName,
@@ -647,12 +633,15 @@ export default {
         });
     },
 
-    submit(){
+    submit() {
       const self = this;
       var formData = new window.FormData();
 
-      formData.append('file', document.querySelector('input[type=file]').files[0]) // 'file' 这个名字要和后台获取文件的名字一样;
-      formData.append('user',this.name)
+      formData.append(
+        "file",
+        document.querySelector("input[type=file]").files[0]
+      ); // 'file' 这个名字要和后台获取文件的名字一样;
+      formData.append("user", this.name);
       //'userfile'是formData这个对象的键名
       // self
       //   .$axios({
@@ -669,22 +658,22 @@ export default {
       // }) // 发送请求
       self
         .$axios({
-        url: '/patient/uploadwork',   //****: 你的ip地址
-        data: formData,
-        method: 'post',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          // 'Access-Control-Allow-Origin': 'http://127.0.0.1:8080'
-          //这里是为了解决跨域问题，但是博主并没有用这种方式解决。后面会给出解决方案
-        }
-      })
+          url: "/patient/uploadwork", //****: 你的ip地址
+          data: formData,
+          method: "post",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // 'Access-Control-Allow-Origin': 'http://127.0.0.1:8080'
+            //这里是为了解决跨域问题，但是博主并没有用这种方式解决。后面会给出解决方案
+          },
+        })
         .then((res) => {
           console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
   },
 };
 </script>
@@ -861,7 +850,7 @@ export default {
 
 .ifSpecialistChoose {
   margin-top: 5%;
-  margin-left: 34%;
+  margin-right: 0%;
 }
 
 .myBooking-box-card {
@@ -871,5 +860,39 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
+.bookcard {
+  width: 50%;
+  height: 50%;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  font-size: 20px;
+  text-align: center;
+  top: 35%;
+  left: 50%;
 }
 </style>
