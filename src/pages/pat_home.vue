@@ -47,12 +47,13 @@
       <div class="toBook" v-if="choice == '1-2'">
         <div v-if="ifBooking == '0'">
           <el-row :gutter="20">
-            <el-col :span="16">
+            <el-col :span="24">
               <div class="bookcard">
                 <el-card>
                   <el-select
+                    size="medium"
                     v-model="officeChoice"
-                    @change="getDeptExpert"
+                    @change="getMeetingInfo"
                     placeholder="请选择会议"
                   >
                     <el-option
@@ -64,7 +65,19 @@
                     >
                     </el-option>
                   </el-select>
-                  <div v-bind="meetinginfo"></div>
+                  <el-card v-if="meetingSelected == 1">
+                    <el-col span="16"> this </el-col>
+                  </el-card>
+                  <el-col span="4"> </el-col>
+                  <el-col span="16" v-if="meetingSelected == 1">
+                    <el-button
+                      type="success"
+                      @click="bookCommit"
+                      size="mini"
+                      style="margin-left: 12.7%"
+                      >预约</el-button
+                    >
+                  </el-col>
                 </el-card>
               </div>
             </el-col>
@@ -238,27 +251,48 @@
       </div>
       <div class="myInfo" v-if="choice == '4'">
         <el-card>
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="http://localhost:8080/patient/uploadwork"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :on-success="printsuccess"
-            :file-list="fileList"
-            :auto-upload="false"
-          >
-            <el-button slot="trigger" size="small" type="primary"
-              >选取文件</el-button
+          <div class="upload-image">
+            <el-form
+              :model="ruleForm"
+              :rules="rules"
+              ref="ruleForm"
+              label-width="100px"
             >
-            <el-button
-              style="margin-left: 10px"
-              size="small"
-              type="success"
-              @click="submitUpload"
-              >上传到服务器</el-button
-            >
-          </el-upload>
+              <el-form-item label="活动名称" prop="name">
+                <el-input
+                  v-model="ruleForm.name"
+                  style="width: 300px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                label="上传论文"
+                ref="uploadElement"
+                prop="imageUrl"
+              >
+                <el-input v-model="ruleForm.imageUrl" v-if="false"></el-input>
+                <el-upload
+                  class="avatar-uploader"
+                  :on-preview="handlePreview"
+                  ref="upload"
+                  :show-file-list="true"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :before-upload="beforeUpload"
+                  :on-change="handleChange"
+                  :auto-upload="true"
+                  :data="ruleForm"
+                  :file-list="fileList"
+                >
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')"
+                  >立即提交</el-button
+                >
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
         </el-card>
       </div>
       <!--        <div>-->
@@ -279,10 +313,12 @@ export default {
   name: "home",
   data() {
     return {
+      fileList: [],
       activeIndex: "3",
       choice: "3",
-      meetingList: [],
+      meetingInfo: "",
       ifBooking: 0,
+      meetingSelected: 0,
       bookingContent: [],
       infoContent: [
         { key: "姓名：", value: this.$store.state.name },
@@ -290,6 +326,14 @@ export default {
         { key: "出生日期：", value: this.$store.state.birthday },
       ],
       ifSpecialist: "普通门诊",
+      ruleForm: {
+        name: "",
+        imageUrl: "",
+      },
+      rules: {
+        name: [{ required: true, message: "请输入论文名称", trigger: "blur" }],
+        imageUrl: [{ required: true, message: "请上传论文", trigger: "blur" }],
+      },
       date: null,
 
       inLineCheckTypeChoice: "",
@@ -363,6 +407,30 @@ export default {
   },
   computed: {},
   methods: {
+    submitForm(formName) {
+      let vm = this;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          vm.$refs.upload.submit();
+        } else {
+          return false;
+        }
+      });
+    },
+    handlePreview() {},
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.ruleForm.imageUrl = "";
+    },
+
+    handleChange(file, fileList) {
+      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
+    },
+
+    beforeUpload(file) {
+      return true;
+    },
+
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
       this.choice = key;
@@ -395,23 +463,19 @@ export default {
           }
         });
     },
-    getDeptExpert() {
+    getMeetingInfo() {
       const self = this;
+      self.meetingSelected = 1;
+      //officechoice -> meetingid
       self
         .$axios({
           method: "get",
-          url: "/appoint/queryAllExpert/" + this.officeChoice,
+          url: "/appoint/queryOneDept/" + this.officeChoice,
           params: {},
         })
         .then((res) => {
           if (res.data.status) console.log(res.data.body);
-          self.SpecialistOptions = [];
-          for (var i = 0; i < res.data.body.length; i++) {
-            self.SpecialistOptions.push({
-              label: res.data.body[i].userName,
-              value: res.data.body[i].userID,
-            });
-          }
+          this.meetingInfo = res.data.body;
         })
         .catch((err) => {
           console.log(err);
@@ -566,19 +630,12 @@ export default {
             }
             console.log(this.ifBooking);
             console.log(originAppoint.type);
-            if (originAppoint.type == "expert") {
-              this.bookingContent = [
-                { key: "预约类型：", value: "专家预约" },
-                { key: "预约专家：", value: originAppoint.expert },
-                { key: "预约时间：", value: originAppoint.date },
-              ];
-            } else {
-              this.bookingContent = [
-                { key: "预约类型：", value: "线上预约" },
-                { key: "预约会议：", value: originAppoint.dept },
-                { key: "预约时间：", value: originAppoint.date },
-              ];
-            }
+            this.bookingContent = [
+              { key: "预约会议：", value: originAppoint.rName },
+              { key: "会议主题：", value: originAppoint.rTheme },
+              { key: "会议地址：", value: originAppoint.rAddress },
+              { key: "会议时间：", value: originAppoint.rTime },
+            ];
           } else {
             alert("查询失败失败");
           }
@@ -588,28 +645,7 @@ export default {
         });
     },
     bookCommit() {
-      if (this.ifSpecialist == "普通门诊") {
-        if (
-          this.officeChoice != "" &&
-          this.weekChoice != "" &&
-          this.dayChoice != ""
-        ) {
-          alert("已提交！");
-          this.makeappoitment("dept", this.officeChoice);
-          this.ifBooking = 1;
-        } else alert("请完善您的选择！");
-      } else if (this.ifSpecialist == "专家门诊") {
-        if (
-          this.officeChoice != "" &&
-          this.weekChoice != "" &&
-          this.dayChoice != "" &&
-          this.specialistChoice != ""
-        ) {
-          this.makeappoitment("expert", this.specialistChoice);
-          alert("已提交！");
-          this.ifBooking = 1;
-        } else alert("请完善您的选择！");
-      }
+      this.makeappoitment("dept", this.officeChoice);
     },
 
     cancelBook() {
@@ -885,14 +921,14 @@ export default {
   background-color: #f9fafc;
 }
 .bookcard {
-  width: 50%;
-  height: 50%;
+  width: 80%;
+  height: 80%;
   background-position: center;
   background-size: cover;
   position: relative;
   font-size: 20px;
   text-align: center;
   top: 35%;
-  left: 50%;
+  left: 10%;
 }
 </style>
