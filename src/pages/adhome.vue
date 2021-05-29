@@ -9,21 +9,30 @@
       text-color="#fff"
       active-text-color="#ffd04b"
     >
-      <el-submenu index="1">
-        <template slot="title">论文管理</template>
-        <el-menu-item index="1-1">查看投稿论文</el-menu-item>
+      <!-- <el-submenu index="1">
+        <!-- <template slot="title">论文管理</template> -->
+      <!-- <el-menu-item index="1-1">查看投稿论文</el-menu-item>
         <el-menu-item index="1-2">同意论文评审</el-menu-item>
         <el-menu-item index="1-3">查看论文评审结果</el-menu-item>
-        <el-menu-item index="1-4">处理回复</el-menu-item>
-      </el-submenu>
+        <el-menu-item index="1-4">处理回复</el-menu-item> -->
+      <!-- </el-submenu> -->
+      <el-menu-item
+        index="1"
+        @click="getpapers"
+      >查看论文状态</el-menu-item>
       <el-menu-item index="2">我的账户</el-menu-item>
       <el-menu-item index="3">会议信息发布</el-menu-item>
     </el-menu>
     <div class="finance_contain">
-      <div class="moneyIn" v-if="choice == '1-1'">
-        <div class="moneyBigBox" style="margin-top: 0%; margin-left: 0%">
-          <div
-            style="
+      <div
+        class="moneyIn"
+        v-if="choice == '1-1'"
+      >
+        <div
+          class="moneyBigBox"
+          style="margin-top: 0%; margin-left: 0%"
+        >
+          <div style="
               width: 97%;
               margin-left: 1%;
               margin-bottom: 1%;
@@ -32,19 +41,15 @@
               background-color: white;
               display: flex;
               flex-direction: row;
-            "
-          >
-            <span
-              style="
+            ">
+            <span style="
                 font-size: 22px;
                 margin-top: 0.5%;
                 margin-left: 9%;
                 margin-bottom: 0.5%;
                 margin-right: 0.5%;
                 font-weight: bold;
-              "
-              >请输入需要处理的论文ID：</span
-            >
+              ">请输入需要处理的论文ID：</span>
             <el-input
               placeholder="请输入内容"
               v-model="inMoneyListNumber"
@@ -57,8 +62,7 @@
               size="mini"
               @click="laodMoneyFromServer"
               icon="el-icon-search"
-              >搜索</el-button
-            >
+            >搜索</el-button>
           </div>
           <div
             class="moneySmallBox"
@@ -81,15 +85,26 @@
               "
               max-height="698"
             >
-              <el-table-column prop="name" label="论文名" width="275">
+              <el-table-column
+                prop="name"
+                label="论文名"
+                width="275"
+              >
               </el-table-column>
-              <el-table-column prop="count" label="关键字" width="275">
+              <el-table-column
+                prop="count"
+                label="关键字"
+                width="275"
+              >
               </el-table-column>
-              <el-table-column prop="singleCost" label="摘要" width="275">
+              <el-table-column
+                prop="singleCost"
+                label="摘要"
+                width="275"
+              >
               </el-table-column>
             </el-table>
-            <div
-              style="
+            <div style="
                 display: flex;
                 flex-direction: column;
                 background-color: white;
@@ -98,38 +113,34 @@
                 width: 45%;
                 border-radius: 20px;
                 box-shadow: 0 0 3px #f0f0f0, 0 0 6px #f0f0f0;
-              "
-            >
-              <span
-                style="
+              ">
+              <span style="
                   font-size: 35px;
                   margin-top: 19%;
                   margin-left: 35%;
                   font-weight: bold;
-                "
-                >投稿会议：{{ totalIn }}</span
+                ">投稿会议：{{ totalIn }}</span>
+              <!--              <span-->
+              <!--                style="-->
+              <!--                  font-size: 20px;-->
+              <!--                  margin-top: 17%;-->
+              <!--                  margin-left: 19%;-->
+              <!--                  margin-bottom: 2%;-->
+              <!--                "-->
+              <!--                >请选择收款方式：</span-->
+              <!--              >-->
+              <!--              <el-select-->
+              <!--                v-model="payMethodsChoice"-->
+              <!--                placeholder="请选择"-->
+              <!--                style="width: 35%; margin-left: 31%"-->
+              <!--              >-->
+              <el-option
+                v-for="item in payMethods"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
-<!--              <span-->
-<!--                style="-->
-<!--                  font-size: 20px;-->
-<!--                  margin-top: 17%;-->
-<!--                  margin-left: 19%;-->
-<!--                  margin-bottom: 2%;-->
-<!--                "-->
-<!--                >请选择收款方式：</span-->
-<!--              >-->
-<!--              <el-select-->
-<!--                v-model="payMethodsChoice"-->
-<!--                placeholder="请选择"-->
-<!--                style="width: 35%; margin-left: 31%"-->
-<!--              >-->
-                <el-option
-                  v-for="item in payMethods"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
+              </el-option>
               </el-select>
               <el-button
                 type="success"
@@ -137,16 +148,20 @@
                 size="mini"
                 style="width: 35%; margin-left: 31%; margin-top: 20%"
                 round
-                >确认增加</el-button
-              >
+              >确认增加</el-button>
             </div>
           </div>
         </div>
       </div>
-      <div class="moneyOut" v-if="choice == '1-2'">
-        <div class="moneyBigBox" style="margin-top: 0%; margin-left: 0%">
-          <div
-            style="
+      <div
+        class="moneyOut"
+        v-if="choice == '1-2'"
+      >
+        <div
+          class="moneyBigBox"
+          style="margin-top: 0%; margin-left: 0%"
+        >
+          <div style="
               width: 97%;
               margin-left: 1%;
               margin-bottom: 1%;
@@ -155,19 +170,15 @@
               background-color: white;
               display: flex;
               flex-direction: row;
-            "
-          >
-            <span
-              style="
+            ">
+            <span style="
                 font-size: 22px;
                 margin-top: 0.5%;
                 margin-left: 9%;
                 margin-bottom: 0.5%;
                 margin-right: 0.5%;
                 font-weight: bold;
-              "
-              >请输入需要处理的论文ID：</span
-            >
+              ">请输入需要处理的论文ID：</span>
             <el-input
               placeholder="请输入内容"
               v-model="outMoneyListNumber"
@@ -180,8 +191,7 @@
               size="mini"
               @click="outMoneyListNumberSearch"
               icon="el-icon-search"
-              >搜索</el-button
-            >
+            >搜索</el-button>
           </div>
           <div
             class="moneySmallBox"
@@ -206,16 +216,30 @@
               @selection-change="handleSelectionChange"
               max-height="698"
             >
-              <el-table-column type="selection" width="55"> </el-table-column>
-              <el-table-column prop="name" label="论文名" width="260">
+              <el-table-column
+                type="selection"
+                width="55"
+              > </el-table-column>
+              <el-table-column
+                prop="name"
+                label="论文名"
+                width="260"
+              >
               </el-table-column>
-              <el-table-column prop="count" label="评审成绩" width="260">
+              <el-table-column
+                prop="count"
+                label="评审成绩"
+                width="260"
+              >
               </el-table-column>
-              <el-table-column prop="singleCost" label="评审结果" width="260">
+              <el-table-column
+                prop="singleCost"
+                label="评审结果"
+                width="260"
+              >
               </el-table-column>
             </el-table>
-            <div
-              style="
+            <div style="
                 display: flex;
                 flex-direction: column;
                 background-color: white;
@@ -224,17 +248,13 @@
                 width: 45%;
                 border-radius: 20px;
                 box-shadow: 0 0 3px #f0f0f0, 0 0 6px #f0f0f0;
-              "
-            >
-              <span
-                style="
+              ">
+              <span style="
                   font-size: 35px;
                   margin-top: 27%;
                   margin-left: 35%;
                   font-weight: bold;
-                "
-                >处理回复</span
-              >
+                ">处理回复</span>
               <textarea
                 style="resize: none; font-size: 20px; margin-right: 5%"
                 v-model="advice"
@@ -247,32 +267,83 @@
                 size="mini"
                 style="width: 35%; margin-left: 31%; margin-top: 27%"
                 round
-                >确认删除</el-button
-              >
+              >确认删除</el-button>
             </div>
           </div>
         </div>
       </div>
-      <div class="myInfo" v-if="choice == '2'">
+      <div v-if="choice == '1'">
+        <el-row gutter="20">
+          <el-col span="24">
+            <el-card
+              v-for="paper in paperList"
+              :key="paper"
+            >
+              <el-row>
+                <el-col span="12">
+                  论文题目：{{paper.name}}
+                </el-col>
+                <el-col span="12">
+                  作者：{{paper.author}}
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col span="12">
+                  {{paper.abstract}}
+                </el-col>
+              </el-row>
+              <el-row>
+
+                <el-col
+                  span="12"
+                  offset="6"
+                >
+                  <el-tag>{{paper.status}}</el-tag>
+                </el-col>
+              </el-row>
+
+            </el-card>
+          </el-col>
+        </el-row>
+
+      </div>
+
+      <div
+        class="myInfo"
+        v-if="choice == '2'"
+      >
         <div class="myInfoContain">
           <el-card class="myInfo-box-card">
-            <div slot="header" class="clearfix">
+            <div
+              slot="header"
+              class="clearfix"
+            >
               <span class="text2 item title">我的账户信息</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="open"
-                >退出登录</el-button
-              >
+              >退出登录</el-button>
             </div>
-            <div v-for="item in infoContent" :key="item" class="text1 item">
-              {{ item.key + "  " + item.value }}
+            <div
+              v-for="item in infoContent"
+              :key="item"
+              class="text1 item"
+            >
+              {{ item.key + " " + item.value }}
             </div>
           </el-card>
         </div>
       </div>
-      <div class ="list" v-if="choice == '3'">
-        <el-form ref="form" :model="form" label-width="80px">
+      <div
+        class="list"
+        v-if="choice == '3'"
+      >
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="80px"
+        >
           <el-form-item label="会议名称">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
@@ -281,18 +352,36 @@
           </el-form-item>
           <el-form-item label="会议时间">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="form.date1"
+                style="width: 100%;"
+              ></el-date-picker>
             </el-col>
-            <el-col class="line" :span="2">-</el-col>
+            <el-col
+              class="line"
+              :span="2"
+            >-</el-col>
             <el-col :span="11">
-              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+              <el-input
+                placeholder="选择时间"
+                v-model="form.date2"
+                style="width: 100%;"
+              ></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="会议主题">
-            <el-input type="textarea" v-model="form.desc"></el-input>
+            <el-input
+              type="textarea"
+              v-model="form.desc"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">发布信息</el-button>
+            <el-button
+              type="primary"
+              @click="onSubmit"
+            >发布信息</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -309,6 +398,29 @@ export default {
       activeIndex: "2",
       choice: "2",
       totalIn: "0",
+      paperList: [
+        {
+          name: "学术会议管理系统",
+          author: "张三",
+          abstract: "dd",
+          comment: "dd",
+          status: "通过",
+        },
+        {
+          name: "",
+          author: "",
+          abstract: "",
+          comment: "",
+          status: "",
+        },
+        {
+          name: "",
+          author: "",
+          abstract: "",
+          comment: "",
+          status: "",
+        },
+      ],
       totalOut: "0",
       form: {
         name: "",
@@ -734,9 +846,60 @@ export default {
           console.log(err);
         });
     },
+    getpapers() {
+      const self = this;
+      self
+        .$axios({
+          method: "get",
+          url: "/appoint/addMeeting",
+          params: {
+            pID: this.$store.state.userID,
+            address: this.form.region,
+            meetingName: this.form.name,
+            time: this.form.date1 + this.form.date2,
+            theme: this.form.desc,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.body);
+          if (res.data.status === 1) {
+            self.$message({
+              message: "会议创建成功",
+              type: "success",
+            });
+            self.$refs["form"].resetFields();
+            self.form = "";
+          }
+        });
+    },
     onSubmit() {
-      console.log("submit!");
-      alert("创建成功");
+      const self = this;
+      let d = new Date(this.form.date1);
+      let date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+      console.log(date + " " + this.form.date2);
+      self.$message({
+        message: "会议创建成功",
+        type: "success",
+      });
+      self.$refs["form"].resetFields();
+      self.form = "";
+      self
+        .$axios({
+          method: "POST",
+          url: "/appoint/addMeeting",
+          params: {
+            pID: this.$store.state.userID,
+            address: this.form.region,
+            meetingName: this.form.name,
+            time: date,
+            theme: this.form.desc,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.body);
+          {
+          }
+        });
     },
   },
 };

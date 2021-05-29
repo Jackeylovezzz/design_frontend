@@ -6,27 +6,43 @@
           <div class="big-contain">
             <div class="btitle">会议管理人员账户登录</div>
             <div class="bform">
-              <input type="text" placeholder="证件号" v-model="form.userid" />
-              <span class="errTips" v-if="idError">* 证件号填写错误 *</span>
+              <input
+                type="text"
+                placeholder="证件号"
+                v-model="form.userid"
+              />
+              <span
+                class="errTips"
+                v-if="idError"
+              >* 证件号填写错误 *</span>
               <input
                 type="password"
                 placeholder="密码"
                 v-model="form.userpwd"
               />
-              <span class="errTips" v-if="passwordError">* 密码填写错误 *</span>
+              <span
+                class="errTips"
+                v-if="passwordError"
+              >* 密码填写错误 *</span>
             </div>
-            <button class="bbutton" @click="login">登录</button>
+            <button
+              class="bbutton"
+              @click="login"
+            >登录</button>
           </div>
         </div>
         <div class="small-box">
           <div style="margin-top:40%">
             <span style="color:white;font-size:19px;margin-left:31%;margin-top:72%">请选择您的职能：</span>
-            <el-radio-group v-model="typeSelect" style="margin-top:20%;margin-left:9%">
+            <el-radio-group
+              v-model="typeSelect"
+              style="margin-top:20%;margin-left:9%"
+            >
               <el-radio-button label="评审"></el-radio-button>
-<!--              <el-radio-button label="药师"></el-radio-button>-->
+              <!--              <el-radio-button label="药师"></el-radio-button>-->
               <el-radio-button label="管理员"></el-radio-button>
-<!--              <el-radio-button label="财务"></el-radio-button>-->
-<!--              <el-radio-button label="分诊"></el-radio-button>-->
+              <!--              <el-radio-button label="财务"></el-radio-button>-->
+              <!--              <el-radio-button label="分诊"></el-radio-button>-->
             </el-radio-group>
           </div>
         </div>
@@ -41,7 +57,7 @@ export default {
   data() {
     return {
       passwordError: false,
-      typeSelect:'',
+      typeSelect: "",
       form: {
         username: "",
         userid: "",
@@ -51,58 +67,52 @@ export default {
   },
   methods: {
     handleChange(value) {
-        console.log(value);
-      },
+      console.log(value);
+    },
     login() {
-      if(this.typeSelect=='')
-        alert("失败：请选择您的职能类型");
-      else{
+      if (this.typeSelect == "") alert("失败：请选择您的职能类型");
+      else {
         const self = this;
         if (self.form.userid != "" && self.form.userpwd != "") {
-          if(this.typeSelect == "评审"){
-            this.typeSelect = "doctor"
-          }else if(this.typeSelect == "管理员"){
-            this.typeSelect = "pharmacist"
-
-          }else if(this.typeSelect == "会计"){
-            this.typeSelect = "cashier"
-
-          }else{
-            this.typeSelect = "administrator"
+          if (this.typeSelect == "评审") {
+            this.typeSelect = "doctor";
+          } else if (this.typeSelect == "管理员") {
+            this.typeSelect = "pharmacist";
+          } else if (this.typeSelect == "会计") {
+            this.typeSelect = "cashier";
+          } else {
+            this.typeSelect = "administrator";
           }
           self
-           .$axios({
+            .$axios({
               method: "post",
               url: "/user/login",
               params: {
                 userID: self.form.userid,
                 userCode: self.form.userpwd,
-                type:this.typeSelect,
+                type: this.typeSelect,
               },
             })
             .then((res) => {
               switch (res.data.status) {
                 case 1:
-
                   alert("登录成功！");
-                console.log(this.typeSelect)
-                if(this.typeSelect == "doctor"){
-                      this.$router.push({path:"/rehome"})
-                }else if(this.typeSelect == "pharmacist"){
-                      this.$router.push({path:"/adhome"})
-
-                }else if(this.typeSelect == "cashier"){
-                      this.$router.push({path:"/dochome"})
-
-                }else{
-                      this.$router.push({path:"/admhome"})
-                }
-                this.$store.state.userID = res.data.body.userID
-                this.$store.state.name = res.data.body.userName
-                this.$store.state.gender = res.data.body.userGender
-                this.$store.state.birthday = res.data.body.userBirthday
+                  console.log(this.typeSelect);
+                  if (this.typeSelect == "doctor") {
+                    this.$router.push({ path: "/rehome" });
+                  } else if (this.typeSelect == "pharmacist") {
+                    this.$router.push({ path: "/adhome" });
+                  } else if (this.typeSelect == "cashier") {
+                    this.$router.push({ path: "/admin" });
+                  } else {
+                    this.$router.push({ path: "/admin" });
+                  }
+                  this.$store.state.userID = res.data.body.userID;
+                  this.$store.state.name = res.data.body.userName;
+                  this.$store.state.gender = res.data.body.userGender;
+                  this.$store.state.birthday = res.data.body.userBirthday;
                   break;
-               case 0:
+                case 0:
                   this.passwordError = true;
                   break;
               }
@@ -112,14 +122,13 @@ export default {
             });
         } else {
           alert("填写不能为空！");
-       }
+        }
       }
     },
 
-    FENZHEN(){
-        this.$router.push({path:'/fenzhen'});
-      },
-
+    FENZHEN() {
+      this.$router.push({ path: "/fenzhen" });
+    },
   },
 };
 </script>
@@ -162,7 +171,7 @@ export default {
 .big-contain {
   width: 100%;
   height: 100%;
-  margin-left:10%;
+  margin-left: 10%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -204,7 +213,7 @@ export default {
   height: 2%;
   padding: 1em 0;
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }
@@ -213,7 +222,7 @@ export default {
   height: 5%;
   padding: 1em 0;
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }

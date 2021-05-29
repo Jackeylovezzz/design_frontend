@@ -11,40 +11,62 @@
     >
       <el-submenu index="1">
         <template slot="title">会议管理</template>
-        <el-menu-item index="1-1" @change="queryAppointment"
-          >查看我的预约</el-menu-item
-        >
+        <el-menu-item
+          index="1-1"
+          @change="queryAppointment"
+        >查看我的预约</el-menu-item>
         <el-menu-item index="1-2">预约会议</el-menu-item>
       </el-submenu>
-      <el-menu-item @click="queryAppointment" index="2">查看会议</el-menu-item>
+      <el-menu-item
+        @click="queryAppointment"
+        index="2"
+      >查看会议</el-menu-item>
       <el-menu-item index="3">我的账户</el-menu-item>
       <el-menu-item index="4">提交论文</el-menu-item>
     </el-menu>
     <div class="patient_contain">
-      <div class="myBooking" v-if="choice == '1-1'">
-        <div class="showBooking" v-if="ifBooking == '1'">
+      <div
+        class="myBooking"
+        v-if="choice == '1-1'"
+      >
+        <div
+          class="showBooking"
+          v-if="ifBooking == '1'"
+        >
           <el-card class="myBooking-box-card">
-            <div slot="header" class="clearfix">
+            <div
+              slot="header"
+              class="clearfix"
+            >
               <span class="text2 item title">我的预约</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 @click="cancelBook"
                 type="text"
-                >取消预约</el-button
-              >
+              >取消预约</el-button>
             </div>
-            <div v-for="item in bookingContent" :key="item" class="text1 item">
+            <div
+              v-for="item in bookingContent"
+              :key="item"
+              class="text1 item"
+            >
               {{ item.key + " " + item.value }}
             </div>
           </el-card>
         </div>
-        <div class="noBooking" v-if="ifBooking == '0'">
+        <div
+          class="noBooking"
+          v-if="ifBooking == '0'"
+        >
           <el-card class="noBooking-box-card">
             {{ "您暂时没有有效的预约" }}
           </el-card>
         </div>
       </div>
-      <div class="toBook" v-if="choice == '1-2'">
+      <div
+        class="toBook"
+        v-if="choice == '1-2'"
+      >
         <div v-if="ifBooking == '0'">
           <el-row :gutter="20">
             <el-col :span="24">
@@ -69,14 +91,16 @@
                     <el-col span="16"> this </el-col>
                   </el-card>
                   <el-col span="4"> </el-col>
-                  <el-col span="16" v-if="meetingSelected == 1">
+                  <el-col
+                    span="16"
+                    v-if="meetingSelected == 1"
+                  >
                     <el-button
                       type="success"
                       @click="bookCommit"
                       size="mini"
                       style="margin-left: 12.7%"
-                      >预约</el-button
-                    >
+                    >预约</el-button>
                   </el-col>
                 </el-card>
               </div>
@@ -170,18 +194,22 @@
             >预约</el-button>
           </div> -->
         </div>
-        <div class="alreadyBooking" v-if="ifBooking == '1'">
+        <div
+          class="alreadyBooking"
+          v-if="ifBooking == '1'"
+        >
           <el-card class="alreadyBooking-box-card">
             {{ "您已有预约，无法再次预约" }}
           </el-card>
         </div>
       </div>
-      <div class="myInLine" v-if="choice == '2'">
+      <div
+        class="myInLine"
+        v-if="choice == '2'"
+      >
         <div class="myInLineContain">
           <div style="display: flex; flex-direction: row">
-            <span style="font-size: 20px; margin-left: 0%; font-weight: bold"
-              >类别：</span
-            >
+            <span style="font-size: 20px; margin-left: 0%; font-weight: bold">类别：</span>
             <el-radio-group
               v-model="inLineCheckTypeChoice"
               style="
@@ -198,8 +226,7 @@
             <span
               style="font-size: 20px; margin-left: 15%; font-weight: bold"
               v-if="inLineCheckTypeChoice != ''"
-              >会议：</span
-            >
+            >会议：</span>
             <el-select
               v-model="inLineCheckOfficeChoice"
               @change="getQueueData"
@@ -223,33 +250,56 @@
             style="width: 100%"
             max-height="660"
           >
-            <el-table-column prop="numberInLine" label="序号" width="180">
+            <el-table-column
+              prop="numberInLine"
+              label="序号"
+              width="180"
+            >
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="180">
+            <el-table-column
+              prop="name"
+              label="姓名"
+              width="180"
+            >
             </el-table-column>
-            <el-table-column prop="state" label="状态"> </el-table-column>
+            <el-table-column
+              prop="state"
+              label="状态"
+            > </el-table-column>
           </el-table>
         </div>
       </div>
-      <div class="myInfo" v-if="choice == '3'">
+      <div
+        class="myInfo"
+        v-if="choice == '3'"
+      >
         <div class="myInfoContain">
           <el-card class="myInfo-box-card">
-            <div slot="header" class="clearfix">
+            <div
+              slot="header"
+              class="clearfix"
+            >
               <span class="text2 item title">我的账户信息</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="open"
-                >退出登录</el-button
-              >
+              >退出登录</el-button>
             </div>
-            <div v-for="item in infoContent" :key="item" class="text1 item">
+            <div
+              v-for="item in infoContent"
+              :key="item"
+              class="text1 item"
+            >
               {{ item.key + " " + item.value }}
             </div>
           </el-card>
         </div>
       </div>
-      <div class="myInfo" v-if="choice == '4'">
+      <div
+        class="myInfo"
+        v-if="choice == '4'"
+      >
         <el-card>
           <div class="upload-image">
             <el-form
@@ -258,9 +308,32 @@
               ref="ruleForm"
               label-width="100px"
             >
-              <el-form-item label="活动名称" prop="name">
+              <el-form-item
+                label="论文名称"
+                prop="name"
+              >
                 <el-input
                   v-model="ruleForm.name"
+                  style="width: 300px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                label="论文摘要"
+                prop="abstract"
+              >
+                <el-input
+                  type="textarea"
+                  :rows="5"
+                  placeholder="请输入内容"
+                  v-model="ruleForm.abstract"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                label="论文作者"
+                prop="author"
+              >
+                <el-input
+                  v-model="ruleForm.author"
                   style="width: 300px"
                 ></el-input>
               </el-form-item>
@@ -269,7 +342,10 @@
                 ref="uploadElement"
                 prop="imageUrl"
               >
-                <el-input v-model="ruleForm.imageUrl" v-if="false"></el-input>
+                <el-input
+                  v-model="ruleForm.imageUrl"
+                  v-if="false"
+                ></el-input>
                 <el-upload
                   class="avatar-uploader"
                   :on-preview="handlePreview"
@@ -278,17 +354,21 @@
                   action="https://jsonplaceholder.typicode.com/posts/"
                   :before-upload="beforeUpload"
                   :on-change="handleChange"
-                  :auto-upload="true"
-                  :data="ruleForm"
+                  :auto-upload="false"
                   :file-list="fileList"
+                  :http-request="submitfile"
                 >
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                  >点击上传</el-button>
                 </el-upload>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')"
-                  >立即提交</el-button
-                >
+                <el-button
+                  type="primary"
+                  @click="submitForm('ruleForm')"
+                >立即提交</el-button>
                 <el-button @click="resetForm('ruleForm')">重置</el-button>
               </el-form-item>
             </el-form>
@@ -318,6 +398,7 @@ export default {
       choice: "3",
       meetingInfo: "",
       ifBooking: 0,
+      formdata: new FormData(),
       meetingSelected: 0,
       bookingContent: [],
       infoContent: [
@@ -329,10 +410,18 @@ export default {
       ruleForm: {
         name: "",
         imageUrl: "",
+        abstract: "",
+        author: "",
       },
       rules: {
         name: [{ required: true, message: "请输入论文名称", trigger: "blur" }],
+        abstract: [
+          { required: true, message: "请输入论文摘要", trigger: "blur" },
+        ],
         imageUrl: [{ required: true, message: "请上传论文", trigger: "blur" }],
+        author: [
+          { required: true, message: "请输入论文作者", trigger: "blur" },
+        ],
       },
       date: null,
 
@@ -407,11 +496,38 @@ export default {
   },
   computed: {},
   methods: {
+    submitfile(param) {
+      var fileObj = param.file;
+      this.formData.append("file", param.file);
+    },
     submitForm(formName) {
       let vm = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          vm.$refs.upload.submit();
+          vm.formdata.append("paperName", this.ruleForm.name);
+          vm.formdata.append("paperabstract", this.ruleForm.abstract);
+          vm.formdata.append("paperAuthor", this.ruleForm.author);
+          vm.formdata.append("pID", this.$store.userID);
+
+          var config = {
+            method: "post",
+            url: "http://localhost:8081/appoint/upload",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            data: vm.formdata,
+          };
+          this.$message({ message: "提交成功", type: "success" });
+          this.resetForm("ruleForm");
+          axios(config)
+            .then(function(response) {
+              console.log(JSON.stringify(response.data.body));
+              this.$message({ message: "提交成功", type: "success" });
+              this.resetForm("ruleForm");
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
         } else {
           return false;
         }
@@ -421,6 +537,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.ruleForm.imageUrl = "";
+      this.$refs.upload.clearFiles();
     },
 
     handleChange(file, fileList) {
